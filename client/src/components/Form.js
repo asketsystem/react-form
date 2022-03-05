@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+
 import { AlertError } from "./views/AlertError";
 import { AlertSuccess } from "./views/AlertSuccess";
 
@@ -11,7 +12,7 @@ export const Form = () => {
   };
 
   const [formData, setFormData] = useState(initialFormData);
-  const [formSuccess, setFormSuccess] = useState();
+  const [formSuccess, setFormSuccess] = useState("");
   const [formErrors, setFormErrors] = useState([]);
 
   const handleSubmit = async (e) => {
@@ -19,7 +20,7 @@ export const Form = () => {
 
     try {
       // Send POST request
-      await axios.post("https://locahost:5000/api/v1/person", formData);
+      await axios.post("http://localhost:5000/api/v1/person", formData);
 
       // HTTP req successful
       setFormSuccess("Data received correctly");
@@ -34,10 +35,10 @@ export const Form = () => {
   const handleErrors = (err) => {
     if (err.response.data && err.response.data.errors) {
       // Handle validation errors
-      const { erros } = err.response.data;
+      const { errors } = err.response.data;
 
-      let errMsg = [];
-      for (let error of erros) {
+      let errorMsg = [];
+      for (let error of errors) {
         const { msg } = error;
 
         errorMsg.push(msg);
@@ -46,7 +47,7 @@ export const Form = () => {
       setFormErrors(errorMsg);
     } else {
       // Handle generic error
-      setFormErrors(["Oops, there was an error"]);
+      setFormErrors(["Oops, there was an error!"]);
     }
   };
 
@@ -61,44 +62,42 @@ export const Form = () => {
 
   return (
     <div>
-      <div>
-        <form onSubmit={handleSubmit} className="form">
-          <h1>React form</h1>
-          <AlertSuccess success={formSuccess} />
-          <AlertError errors={formErrors} />
-          <div>
-            <label>Name</label>
-            <input
-              type="text"
-              name="name"
-              className="input"
-              value={formData.name}
-              onInput={handleChange}
-            />
-          </div>
-          <div>
-            <label>Age</label>
-            <input
-              type="number"
-              name="age"
-              className="input"
-              value={formData.age}
-              onInput={handleChange}
-            />
-          </div>
-          <div>
-            <label>E-mail</label>
-            <input
-              type="email"
-              name="email"
-              className="input"
-              value={formData.email}
-              onInput={handleChange}
-            />
-          </div>
-          <input type="submit" className="button" value="Submit" />
-        </form>
-      </div>
+      <form onSubmit={handleSubmit} className="form">
+        <h1>React form</h1>
+        <AlertSuccess success={formSuccess} />
+        <AlertError errors={formErrors} />
+        <div>
+          <label>Name</label>
+          <input
+            type="text"
+            name="name"
+            className="input"
+            value={formData.name}
+            onInput={handleChange}
+          />
+        </div>
+        <div>
+          <label>Age</label>
+          <input
+            type="number"
+            name="age"
+            className="input"
+            value={formData.age}
+            onInput={handleChange}
+          />
+        </div>
+        <div>
+          <label>E-mail</label>
+          <input
+            type="email"
+            name="email"
+            className="input"
+            value={formData.email}
+            onInput={handleChange}
+          />
+        </div>
+        <input type="submit" className="button" value="Submit" />
+      </form>
     </div>
   );
 };
